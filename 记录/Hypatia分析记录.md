@@ -1,13 +1,39 @@
 # `Hypatia`源码记录
 
+## modules
+Hypatia 是一坨工具集, 用来进行卫星网络仿真. 这里主要针对的是给予`ns3`的网络事件仿真部分.
+在`hypatia`涉及的整个ns3仿真中, 主要有三个部分需要注意,如下
+```bash
+Hypatia/
+    |- contrib
+    |   |- basic-sim   
+    |   |- satellite-network
+    |- src
+    |   |-...
+    |   |- satellite
+    |-...
+```
 
+其中
+- `basic-sim`是可以理解为使得ns3仿真脚本更简洁的一层**包装**, 并且, 还能对卫星网络部分提供一定的**范式**.
+- `satellite-network`则是为了专门卫星网络仿真的拓展模组, 并且依赖了`basic-sim`的一个旧版本分支.
+- `satellite`则是西班牙啥电信研究院较早写的一个ns拓展, 主要提供针对卫星运动模型节点的功能.
+
+其中,三个module的依赖关系为`basic-sim -> satellite-network <- satellite`.
+
+## scripts
+
+观察`scratch/main-full.cc`以及`scratch/satnet_main.cc`两个脚本, 会发现差距很小, 在一些部分有些区别例如拓扑. 这样整的目的, 可能是作者想规范化此类仿真的代码框架. 
+
+
+
+## 源码作者的一些习惯
 
 - 重载构造函数, 可以通过复杂的, 弄出一个简化版的.
 
 - simulation -> accessor() 来访问config变量, 虽然安全, 但是感觉并不方便.
 
-- `arbiter-ecmp-helper`这里， `global_ecmp_state` 弄成个三维链表。
-
+- `arbiter-ecmp-helper`这里， `global_ecmp_state` 弄成了三维链表。
 
 
 # 编译报错
