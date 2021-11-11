@@ -132,3 +132,8 @@ requirements
 3. 可视化调试的时候乱跳
 
     代码和实际链接的`.so`并不对应!
+
+4. XXX文件not exist
+   
+   - 确定成功build处可执行文件, 并且路径在`launch.json`没写错
+   - `launch.json`中vsc的内置变量是否写对, 当前活动的代码页是否能根据内置变量指向可执行文件
