@@ -1,4 +1,14 @@
-# 准备
+# 零、准备
+
+
+- [零、准备](#零准备)
+- [一、开发环境](#一开发环境)
+  - [1.1 硬件开发环境](#11-硬件开发环境)
+  - [1.2 软件开发环境](#12-软件开发环境)
+- [二、环境调试:](#二环境调试)
+  - [2.1 ns3程序调试环境](#21-ns3程序调试环境)
+  - [2.2 ns3调试常见报错](#22-ns3调试常见报错)
+  - [2.4 waf调试](#24-waf调试)
 
 requirements
 
@@ -7,9 +17,9 @@ requirements
 - ns3
 - gdb
 
-# 环境构建
+# 一、开发环境
 
-## 硬件开发环境
+## 1.1 硬件开发环境
 最好的是通过windows的笔记本, 还有一个ubuntu的工作站, 两个机器协同工作.两个机器都分别具有有线无线网卡, 有线网卡两台机器互联,文件互相访问的时候接近同一台机器的感觉; 无线各自连接. 
 
 具体实现如下
@@ -18,13 +28,30 @@ requirements
 - 利用 ubuntu、 `samba`、 端到端局域网、 共享文件夹, 实现windows访问ubuntu机器的文件、双向传输文件**透明**.
 - vncViewer(windows端) 和RealVnc(ubuntu端) 进行局域网内远程桌面, 实现一个键盘(笔记本的键盘)无缝跳跃在两台机器上, 切粘贴板共用.
 
-## 软件开发环境
+## 1.2 软件开发环境
 
 主要在 `.vscode/tasks.json`中编写常用task, 例如 waf build, waf --run 等
 
-//todo
 
-## 软件开发环境调试
+
+**notes**
+
+- vscode 中 `ctrl + click` 这种代码跳转, 和实际运行的到底是哪一行, **并不一定是匹配的**, 需要具体看vscode是怎么配置的!
+- //todo
+
+
+
+
+
+# 二、环境调试:
+NS3调试可分为两个: ns3程序\脚本的调试和python调试waf
+
+第一个好理解, 对ns3中c++代码通过gdb调试;
+
+第二个, 则是对ns3中waf的python代码通过pdb调试, 这主要是为了进一步理解waf工作流程, 或者改写相关waf xx过程而准备的.
+
+
+## 2.1 ns3程序调试环境
 
 非实时调试包括logs(包括print调试大法)和测试(要编写匹配的测试代码);
 实时调试有两种方法, 一个是**gdb命令行**, 一个是vscode利用gdb进行**ui调试**. 不嫌麻烦gdb命令行也可以， 如下
@@ -110,9 +137,8 @@ requirements
     主要是根据源码，映射到`build`的程序里去
 
 3. 对着脚本按`f5`, 测试能否调试
-
-
-# 调试常见错误:
+   
+## 2.2 ns3调试常见报错
 
 1. 共享库文件找不到
    
@@ -137,3 +163,31 @@ requirements
    
    - 确定成功build处可执行文件, 并且路径在`launch.json`没写错
    - `launch.json`中vsc的内置变量是否写对, 当前活动的代码页是否能根据内置变量指向可执行文件
+
+## 2.4 waf调试
+
+   1. 命令行调试 
+   
+    可以在ns-3.xx工作目录下, 通过pdb的命令进入调试:
+    `python -m pdb waf xxx`
+
+    这里的xxx是调试的控制台输入指令
+
+    进入后, 相关指令如下
+
+    ```
+    设置断点： (Pdb) b 8 #断点设置该文件的第8行（b即break的首字母） 
+    显示所有断点：(Pdb) b #b命令，没有参数，显示所有断点 
+    删除断点：(Pdb) cl 2 #删除第2个断点 （clear的首字母）
+    Step Over：(Pdb) n #单步执行，next的首字母 
+    Step Into：(Pdb) s #step的首字母 
+    Setp Return：(Pdb) r #return的首字母 
+    Resume：(Pdb) c #continue的首字母
+    Run to Line：(Pdb) j 10 #运行到地10行，jump的首字母
+    (Pdb) p param #查看当前param变量值 
+    (Pdb) l #查看运行到某处代码 (Pdb) a #查看全部栈内变量
+    (Pdb) h #帮助，help的首字母 (Pdb) q #退出，quit的首字母
+    ```
+    2. 利用python集成环境,GUI调试
+
+        改写waf为`waf.py`,在pycharm中调试, 注意编辑`run\debug configuration`.
